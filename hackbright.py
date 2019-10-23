@@ -103,6 +103,22 @@ def assign_grade(github, title, grade):
     print(f"You have successfully added grade {grade} for {github} user.")
 
 
+def add_project(title, description, max_grade):
+    """Create a new project with a description & max grade and print a confirmation."""    
+    QUERY = """
+        INSERT INTO projects (title, description, max_grade)
+            VALUES (:title, :description, :max_grade)
+        """
+
+    db.session.execute(QUERY, {'title': title,
+                               'description': description,
+                               'max_grade': max_grade})
+
+    db.session.commit()
+
+    print(f"You have successfully added project {title} with max grade {max_grade}.")
+
+
 def handle_input():
     """Main loop.
 
@@ -138,13 +154,19 @@ def handle_input():
             github, title, grade = args
             assign_grade(github, title, grade)
 
+        elif command == "add_project":
+            title = args[0]
+            description = " ".join(args[1:-1])
+            max_grade = args[-1]
+            add_project(title, description, max_grade)
+
         elif command == "help":
-            print("""student [github]: find students info by github \n 
-                    new_student [first_name] [last_name] [github]: Add a new student\n
-                    proj_title [title]: Given a project title, print information about the project.\n
-                    get_grade [github] [title]: Print grade student received for a project.\n
-                    set_grade [github] [title] [grade]: Assign a student a grade on an assignment\n
-                    quit: Quit""")
+            print("""student [github]: find students info by github 
+new_student [first_name] [last_name] [github]: Add a new student
+proj_title [title]: Given a project title, print information about the project
+get_grade [github] [title]: Print grade student received for a project
+set_grade [github] [title] [grade]: Assign a student a grade on an assignment
+quit: Quit""")
 
         else:
             if command != "quit":
