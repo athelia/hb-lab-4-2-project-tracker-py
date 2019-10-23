@@ -24,14 +24,14 @@ def get_student_by_github(github):
     """Given a GitHub account name, print info about the matching student."""
 
     QUERY = """
-        SELECT first_name, last_name, github
+        SELECT first_name, last_name, github # -> put three things in our row
         FROM students
         WHERE github = :github
         """
 
     db_cursor = db.session.execute(QUERY, {'github': github})
 
-    row = db_cursor.fetchone()
+    row = db_cursor.fetchone() # -> tuple()
 
     print("Student: {} {}\nGitHub account: {}".format(row[0], row[1], row[2]))
 
@@ -57,7 +57,17 @@ def make_new_student(first_name, last_name, github):
 
 def get_project_by_title(title):
     """Given a project title, print information about the project."""
-    pass
+    QUERY = """
+        SELECT description 
+        FROM projects
+        WHERE title = :title
+        """
+
+    db_cursor = db.session.execute(QUERY, {'title': title})
+
+    row = db_cursor.fetchone()
+    print(row)
+    print(f"Project: {title} \nDescription: {row[0]}")    
 
 
 def get_grade_by_github_title(github, title):
