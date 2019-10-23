@@ -89,7 +89,18 @@ def get_grade_by_github_title(github, title):
 
 def assign_grade(github, title, grade):
     """Assign a student a grade on an assignment and print a confirmation."""
-    pass
+    QUERY = """
+        INSERT INTO grades (student_github, project_title, grade)
+            VALUES (:gh, :proj_title, :grd)
+        """
+
+    db.session.execute(QUERY, {'gh': github,
+                               'proj_title': title,
+                               'grd': grade})
+
+    db.session.commit()
+
+    print(f"You have successfully added grade {grade} for {github} user.")
 
 
 def handle_input():
